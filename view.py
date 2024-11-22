@@ -17,29 +17,34 @@ def index():
 @path.route('/post_form', methods=['POST', ])
 def post_form():
 
-    url = 'https://www.oscs1024.com/oscs/v1/intelligence/list';
-
     per_page = int(request.form.get('per_page',10))
     data = {
         'page': int(request.form.get('page', 1)),
         'per_page':per_page,
     }
     vuln_no = ''
-    print(request.form.get('vuln_no'))
+    # print(request.form.get('vuln_no'))
     if request.form.get('vuln_no'):
         vuln_no = request.form.get('vuln_no')
-        data['vuln_no'] = vuln_no
-        res = requests.post('https://www.oscs1024.com/oscs/v1/vdb/info',  json=data).json()
-        rows = res['data']
-        for i in rows:
-            idx = rows.index(i)
-            rows[idx]['created_at'] = getTimestr( int(i['publish_time']/1000) )
+        # data['vuln_no'] = vuln_no
+        # res = requests.post('https://www.oscs1024.com/oscs/v1/vdb/info',  json=data).json()
+        res = requests.post('https://www.oscs1024.com/oscs/v1/vdb/vuln_info/'+vuln_no, ).json()
+        # rows = res['data']
+        rows = []
+        count = 0
+        if 'title' in res.keys(): 
+            count = 1
+            rows = [res]
+            for i in rows:
+                idx = rows.index(i)
+                rows[idx]['created_at'] = i['published_time']
+                rows[idx]['mps'] = i['mps_id']
     
         respos = {
             "status": 0,
             "data": {
                 'rows': rows,
-                "count": 1
+                "count": count
             },
             'msg': ''
         }
