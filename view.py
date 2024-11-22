@@ -23,22 +23,25 @@ def post_form():
         'per_page':per_page,
     }
     vuln_no = ''
-    # print(request.form.get('vuln_no'))
     if request.form.get('vuln_no'):
         vuln_no = request.form.get('vuln_no')
-        # data['vuln_no'] = vuln_no
-        # res = requests.post('https://www.oscs1024.com/oscs/v1/vdb/info',  json=data).json()
-        res = requests.post('https://www.oscs1024.com/oscs/v1/vdb/vuln_info/'+vuln_no, ).json()
+        try:
+            res = requests.get('https://www.oscs1024.com/oscs/v1/vdb/vuln_info/'+vuln_no ).json()
+            rows = []
+            count = 0
+            if 'title' in res.keys(): 
+                count = 1
+                rows = [res]
+                for i in rows:
+                    idx = rows.index(i)
+                    rows[idx]['created_at'] = i['published_time']
+                    rows[idx]['mps'] = i['mps_id']
+
+        except Exception as e:
+            rows = []
+            count = 0
         # rows = res['data']
-        rows = []
-        count = 0
-        if 'title' in res.keys(): 
-            count = 1
-            rows = [res]
-            for i in rows:
-                idx = rows.index(i)
-                rows[idx]['created_at'] = i['published_time']
-                rows[idx]['mps'] = i['mps_id']
+        
     
         respos = {
             "status": 0,
@@ -88,7 +91,6 @@ def detail():
     
     if 'CVE' in rows['cve_id'] :
         rows['cve_id'] = '<a href="%s">%s</a>'%('https://nvd.nist.gov/vuln/detail/'+rows['cve_id'],'https://nvd.nist.gov/vuln/detail/'+rows['cve_id'])
-
 
 
     respos = {
