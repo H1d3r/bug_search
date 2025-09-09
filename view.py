@@ -1,5 +1,5 @@
 import json,time
-import requests
+import requests,os
 import urllib3
 from flask import request, Blueprint, render_template
 
@@ -33,7 +33,6 @@ def post_form():
                 count = 1
                 rows = [res]
                 for i in rows:
-                    idx = rows.index(i)
                     rows[idx]['created_at'] = i['published_time']
                     rows[idx]['mps'] = i['mps_id']
 
@@ -55,8 +54,23 @@ def post_form():
         res = requests.post('https://www.oscs1024.com/oscs/v1/intelligence/list',  json=data).json()
         rows = res['data']['data']
         for i in rows:
+            if i['public_time'][0:10] == getTimestr(int(time.time())):
+            # 如果是今天发布的漏洞
+                with open('dingding_notice.log','r') as f:
+                    data = json.loads(f.read())
+                    print(data)
+                if i['title'] not in data:
+                    if os.path.exists('ding.json'):
+                        access_token = json.loads(open('ding.json','r').read())['access_token']
+                        url = 'https://oapi.dingtalk.com/robot/send?access_token='+access_token 
+                        resp = requests.post(url, json={'msgtype':'text','text':{'content':'WAF  漏洞情报'+i['title']}}).json()
+                        if resp['errcode']== 0:
+                            data.append(i['title'])
+                            with open('dingding_notice.log','w') as f:
+                                f.write(json.dumps(data,ensure_ascii=False))
+
             idx = rows.index(i)
-            rows[idx]['created_at'] = i['created_at'].replace('T', ' ').replace('+', ' ')[0:per_page]
+            rows[idx]['publish_time'] = i['public_time'][0:10]
     
         respos = {
             "status": 0,
@@ -103,3 +117,24 @@ def detail():
 def getTimestr(timeint):
     timeArray = time.localtime(timeint)
     return  time.strftime("%Y-%m-%d", timeArray)
+
+@path.route('/validDing', methods=['GET' ,'POST'])
+def validDing():
+    access_token = request.form.get('access_token')
+    if access_token:
+        url = 'https://oapi.dingtalk.com/robot/send?access_token='+access_token
+        res = requests.post(url, json={'msgtype':'text','text':{'content':"WAF test ok"}}).json()
+        # print(res)
+        if res['errcode']== 0:
+            with open('ding.json','w') as f:
+                f.write(json.dumps({"access_token":access_token}))
+            return json.dumps({'status':0,'msg':'测试成功'})
+        else:
+            return json.dumps({'status':1,'msg':'测试失败'})
+        
+@path.route('/getDing', methods=['GET' ,'POST'])
+def getDing():
+    if os.path.exists('ding.json'):
+        with open('ding.json','r') as f:
+            return json.dumps({"access_token":json.loads(f.read())['access_token']})
+    return json.dumps({"access_token":''})

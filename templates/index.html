@@ -85,8 +85,8 @@
 
                                         },
                                         {
-                                            "name": "created_at",
-                                            "label": "发布时间",
+                                            "name": "publish_time",
+                                            "label": "公开时间",
                                         },
 
                                         {
@@ -318,7 +318,26 @@
 
 
                             ]
-                        },
+                        },{
+                            "title":'告警配置',
+                            "body":{
+                                "type": "form",
+                                "api": {
+                                "method": "post",
+                                "url": "/validDing",
+                                "dataType": "form"
+                                },
+                                "initApi":"/getDing",
+                                "body": [
+                                {
+                                    "type": "input-text",
+                                    "name": "access_token",
+                                    "label": "钉钉机器人access_token："
+                                }
+                                
+                                ]
+                            }
+                        }
                     ]
                 },
                 {
