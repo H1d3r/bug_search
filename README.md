@@ -1,17 +1,20 @@
 # bug_search
-一款免费开源的漏洞情报系统
+一款免费开源轻量的漏洞情报系统
 
 # 基于python3 + Amis2.9 开发
-仅依赖Flask,requests，Amis是百度开源的低代码前端框架
+仅依赖Flask,requests，无需数据库，Amis是百度开源的低代码前端框架
 # 漏洞情报包含：组件漏洞 + 软件漏洞 + 系统漏洞
+<br/>
 
 # docker-compose部署方式（推荐）
 1. git clone https://github.com/menglike/bug_search && cd bug_search
 2. docker-compose up -d
+<br/>
 
 # docker部署方式（推荐）
 1. git clone https://github.com/menglike/bug_search && cd bug_search && docker build -t  bug_search:v2 .
 2. docker run --name bugsearch2 -p 7777:7777 -d bug_search:v2
+<br/>
 
 # 源码部署方式：
 1 下载源码，配置python依赖,可以国内镜像源<br/>
@@ -21,8 +24,19 @@
 访问地址：http://localhost:7777/ 或者 http://localhost:7777/index<br/>
 页面预览：
   ![image](WX20230109-091733@2x.png)
+<br/>
 
+# TODO: 
+1.提供Docker-compose部署方式(已完成）<br/>
+2.增加邮件发送消息报警功能
+<br/>   
 更新日志：<br/>
+
+2025.09.09 发布v2.3<br/>
+1.增加钉钉告警通知配置<br>
+2.钉钉配置只需要填入webhook的access_token，且在进入首页时会自动匹配cve发布日期，若与当天日期吻合则会通过配置的钉钉机器人通知到群，且只通知一次。如果要做成自动化通知，建议每隔10分钟请求一次首页(/)即可。<br/>
+3.更新了首页的展示日期为cve公布日期，并非在漏洞库的创建日期。
+<br/>
 
 2024.10.28 发布v2.2<br/>
 1.已经增加了Dockerfile，可以自行完成镜像的构建<br/>
@@ -30,7 +44,7 @@
 <br/>
 
 2024.7.18 发布v2.1<br/>
-1. 增加了搜索
+1. 增加了搜索<br/>
 2. 优化了页面样式
    ![image](WX20240718-201354@2x-2.png)
    ![image](WX20240718-201306@2x-1.png)
@@ -43,8 +57,12 @@
 <br/>
 
 ------------------------------------------------
-如果这个项目对您有帮助，请我喝一杯瑞幸！<br/>
-  ![image](12.png)<br/>
+# 有问题可以issue
+如果这个项目对您有帮助，请我喝一杯瑞幸！
+<br/>
 
-TODO: 1.提供Docker-compose部署方式<br/>
-      2.增加邮件发送消息报警功能
+
+<img src="12.png" width="200" alt="程序截图" /> 
+<br/>
+
+
