@@ -319,7 +319,27 @@
 
                             ]
                         },{
-                            "title":'告警配置',
+                            "title":'飞书告警配置',
+                            "body":{
+                                "type": "form",
+                                "api": {
+                                "method": "post",
+                                "url": "/validFeishu",
+                                "dataType": "form"
+                                },
+                                "initApi":"/getFeishu",
+                                "body": [
+                                {
+                                    "type": "input-text",
+                                    "name": "access_token",
+                                    "label": "飞书机器人access_token："
+                                }
+                                
+                                ]
+                            }
+                        },
+                        {
+                            "title":'钉钉告警配置',
                             "body":{
                                 "type": "form",
                                 "api": {
