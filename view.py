@@ -68,14 +68,15 @@ def post_form():
         try:
             res = requests.post('https://www.oscs1024.com/oscs/v1/intelligence/list', headers=headers, json=data).json()
             rows = res['data']['data']
+            print(rows)
             for i in rows:
 
                 idx = rows.index(i)
                 rows[idx]['publish_time'] = i['public_time'][0:10]
 
-
-                # if i['public_time'][0:10] == getTimestr(int(time.time())):
-                if i['public_time'][0:10] =='2025-09-04': 
+                print(i['public_time'][0:10])
+                if i['public_time'][0:10] == getTimestr(int(time.time())):
+                
                 # 如果是今天发布的漏洞
                     with open('dingding_notice.log','r') as f:
                         data = json.loads(f.read())
@@ -92,15 +93,15 @@ def post_form():
 
                     with open('feishu_notice.log','r') as f:
                         data = json.loads(f.read())
-                        # print(data)
+                        print(data)
                     if i['title'] not in data:
                         if os.path.exists('feishu.json'):
                             access_token = json.loads(open('feishu.json','r').read())['access_token']
 
                             url = 'https://open.feishu.cn/open-apis/bot/v2/hook/'+access_token
-                            resp = requests.post(url, json={'msg_type':'text','content':{'text':' 漏洞情报'+i['title']}}).json()
+                            resp = requests.post(url, json={'msg_type':'text','content':{'text':' 漏洞情报'+i['title']} }).json()
 
-                            if resp['StatusCode']== 0:
+                            if resp['StatusCode'] == 0:
                                 data.append(i['title'])
                                 with open('feishu_notice.log','w') as f:
                                     f.write(json.dumps(data,ensure_ascii=False)) 
