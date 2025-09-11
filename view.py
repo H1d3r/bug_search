@@ -33,14 +33,13 @@ def post_form():
                 count = 1
                 rows = [res]
                 for i in rows:
+                    idx = rows.index(i)
                     rows[idx]['created_at'] = i['published_time']
                     rows[idx]['mps'] = i['mps_id']
 
         except Exception as e:
             rows = []
             count = 0
-        # rows = res['data']
-        
     
         respos = {
             "status": 0,
@@ -124,7 +123,6 @@ def validDing():
     if access_token:
         url = 'https://oapi.dingtalk.com/robot/send?access_token='+access_token
         res = requests.post(url, json={'msgtype':'text','text':{'content':"WAF test ok"}}).json()
-        # print(res)
         if res['errcode']== 0:
             with open('ding.json','w') as f:
                 f.write(json.dumps({"access_token":access_token}))
