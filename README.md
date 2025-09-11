@@ -23,7 +23,7 @@
 
 访问地址：http://localhost:7777/ 或者 http://localhost:7777/index<br/>
 页面预览：
-  ![image](WX20230109-091733@2x.png)
+  ![image](images/WX20230109-091733@2x.png)
 <br/>
 
 # TODO: 
@@ -46,14 +46,14 @@
 2024.7.18 发布v2.1<br/>
 1. 增加了搜索<br/>
 2. 优化了页面样式
-   ![image](WX20240718-201354@2x-2.png)
-   ![image](WX20240718-201306@2x-1.png)
+   ![image](images/WX20240718-201354@2x-2.png)
+   ![image](imagesWX20240718-201306@2x-1.png)
 <br/>
 
 2024.6.10 发布v2<br/>
 1.更新了 数据源
 页面预览：
-  ![image](11.png)
+  ![image](images/11.png)
 <br/>
 
 ------------------------------------------------

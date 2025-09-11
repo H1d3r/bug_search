@@ -69,6 +69,11 @@ def post_form():
             res = requests.post('https://www.oscs1024.com/oscs/v1/intelligence/list', headers=headers, json=data).json()
             rows = res['data']['data']
             for i in rows:
+
+                idx = rows.index(i)
+                rows[idx]['publish_time'] = i['public_time'][0:10]
+
+
                 # if i['public_time'][0:10] == getTimestr(int(time.time())):
                 if i['public_time'][0:10] =='2025-09-04': 
                 # 如果是今天发布的漏洞
@@ -76,10 +81,10 @@ def post_form():
                         data = json.loads(f.read())
                         # print(data)
                     if i['title'] not in data:
-                        if os.path.exists('ding.json'):
+                        if  os.path.exists('ding.json'):
                             access_token = json.loads(open('ding.json','r').read())['access_token']
                             url = 'https://oapi.dingtalk.com/robot/send?access_token='+access_token 
-                            resp = requests.post(url, json={'msgtype':'text','text':{'content':'WAF  漏洞情报'+i['title']}}).json()
+                            resp = requests.post(url, json={'msgtype':'text','text':{'content':'  漏洞情报'+i['title']}}).json()
                             if resp['errcode']== 0:
                                 data.append(i['title'])
                                 with open('dingding_notice.log','w') as f:
@@ -91,16 +96,17 @@ def post_form():
                     if i['title'] not in data:
                         if os.path.exists('feishu.json'):
                             access_token = json.loads(open('feishu.json','r').read())['access_token']
-                            url = 'https://open.feishu.cn/open-apis/bot/v2/hook/'+access_token 
-                            resp = requests.post(url, json={'msgtype':'text','text':{'content':'WAF  漏洞情报'+i['title']}}).json()
+
+                            url = 'https://open.feishu.cn/open-apis/bot/v2/hook/'+access_token
+                            resp = requests.post(url, json={'msg_type':'text','content':{'text':' 漏洞情报'+i['title']}}).json()
+
                             if resp['StatusCode']== 0:
                                 data.append(i['title'])
                                 with open('feishu_notice.log','w') as f:
                                     f.write(json.dumps(data,ensure_ascii=False)) 
+                        
 
-                idx = rows.index(i)
-                rows[idx]['publish_time'] = i['public_time'][0:10]
-        
+                
             respos = {
                 "status": 0,
                 "data": {
@@ -161,7 +167,7 @@ def validDing():
     access_token = request.form.get('access_token')
     if access_token:
         url = 'https://oapi.dingtalk.com/robot/send?access_token='+access_token
-        res = requests.post(url, json={'msgtype':'text','text':{'content':"WAF test ok"}}).json()
+        res = requests.post(url, json={'msgtype':'text','text':{'content':" test ok"}}).json()
         if res['errcode']== 0:
             with open('ding.json','w') as f:
                 f.write(json.dumps({"access_token":access_token}))
@@ -181,8 +187,7 @@ def validFeishu():
     access_token = request.form.get('access_token')
     if access_token:
         url = 'https://open.feishu.cn/open-apis/bot/v2/hook/'+access_token
-        res = requests.post(url, json={'msg_type':'text','content':{'text':"WAF test ok"}}).json()
-        print(res)
+        res = requests.post(url, json={'msg_type':'text','content':{'text':" test ok"}}).json()
         if res['StatusCode']== 0:
             with open('feishu.json','w') as f:
                 f.write(json.dumps({"access_token":access_token}))
